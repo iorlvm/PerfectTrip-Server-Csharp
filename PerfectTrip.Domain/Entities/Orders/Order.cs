@@ -51,10 +51,5 @@ namespace PerfectTrip.Domain.Entities.Orders
 
         [Required]
         public DateTime LastModifiedDate { get; set; }
-
-        public void UpdateLastModifiedDate()
-        {
-            LastModifiedDate = DateTime.UtcNow;
-        }
     }
 }

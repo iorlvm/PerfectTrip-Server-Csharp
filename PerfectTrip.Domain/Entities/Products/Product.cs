@@ -39,10 +39,5 @@ namespace PerfectTrip.Domain.Entities.Products
 
         [Required]
         public DateTime LastModifiedDate { get; set; }
-
-        public void UpdateLastModifiedDate()
-        {
-            LastModifiedDate = DateTime.UtcNow;
-        }
     }
 }

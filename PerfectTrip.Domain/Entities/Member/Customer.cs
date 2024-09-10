@@ -62,10 +62,5 @@ namespace PerfectTrip.Common.Entities.Member
 
         [Required]
         public DateTime LastModifiedDate { get; set; } = DateTime.UtcNow;
-
-        public void UpdateLastModifiedDate()
-        {
-            LastModifiedDate = DateTime.UtcNow;
-        }
     }
 }

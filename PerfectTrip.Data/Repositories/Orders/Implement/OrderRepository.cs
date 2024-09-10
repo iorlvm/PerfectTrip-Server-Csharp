@@ -53,7 +53,7 @@ namespace PerfectTrip.Data.Repositories.Orders.Implement
 
             var offset = (pageNumber - 1) * pageSize;
 
-            return query.Skip(offset).Take(pageSize).ToList();
+            return query.Distinct().Skip(offset).Take(pageSize).ToList();
         }
 
         public IEnumerable<Order> GetByUserId(int userId, int pageNumber = 1, int pageSize = 10, bool isAsc = false)
@@ -84,12 +84,18 @@ namespace PerfectTrip.Data.Repositories.Orders.Implement
         public int Save(Order order)
         {
             if (order == null) throw new ArgumentNullException("order is null");
+
+            var now = DateTime.Now;
+
             if (order.OrderId <= 0)
             {
+                order.CreatedDate = now;
+                order.LastModifiedDate = now;
                 _dbContext.Orders.Add(order);
             }
             else 
             {
+                order.LastModifiedDate = now;
                 _dbContext.Orders.Update(order);
             }
             return _dbContext.SaveChanges();
@@ -102,14 +108,19 @@ namespace PerfectTrip.Data.Repositories.Orders.Implement
                 throw new ArgumentException("orders is null or empty");
             }
 
+            var now = DateTime.Now;
+
             foreach (var order in orders)
             {
                 if (order.OrderId <= 0)
                 {
+                    order.CreatedDate = now;
+                    order.LastModifiedDate = now;
                     _dbContext.Orders.Add(order);
                 }
                 else
                 {
+                    order.LastModifiedDate = now;
                     _dbContext.Orders.Update(order);
                 }
             }
