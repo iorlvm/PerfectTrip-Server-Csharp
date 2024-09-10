@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PerfectTrip.Data;
 
@@ -11,9 +12,10 @@ using PerfectTrip.Data;
 namespace PerfectTrip.Data.Migrations
 {
     [DbContext(typeof(PerfectTripDbContext))]
-    partial class PerfectTripDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240910060601_AddProductAndOrderEntities_WeiEN")]
+    partial class AddProductAndOrderEntities_WeiEN
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
