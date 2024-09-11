@@ -18,72 +18,63 @@ namespace PerfectTrip.Data.Repositories.Orders.Implement
             _dbContext = dbContext;
         }
 
-        public Order? FindById(int id)
+        public async Task<Order?> FindByIdAsync(int id)
         {
-            return _dbContext.Orders.Find(id);
+            return await _dbContext.Orders.FindAsync(id);
         }
 
-        public IEnumerable<Order> GetAll(int pageNumber = 1, int pageSize = 10, bool isAsc = false)
+        public async Task<Page<Order>> GetAllAsync(int pageNumber = 1, int pageSize = 10, bool isAsc = false)
         {
             IQueryable<Order> query = _dbContext.Orders;
-            if (isAsc) 
-            {
-                query = query.OrderBy(x => x.OrderId);
-            } 
-            else 
-            { 
-                query = query.OrderByDescending(x => x.OrderId);
-            }
 
-            var offset = (pageNumber - 1) * pageSize;
-
-            return query.Skip(offset).Take(pageSize).ToList();
+            return await GetPagedOrdersAsync(query, pageNumber, pageSize, isAsc);
         }
 
-        public IEnumerable<Order> GetByCompanyId(int companyId, int pageNumber = 1, int pageSize = 10, bool isAsc = false)
+        public async Task<Page<Order>> GetByCompanyIdAsync(int companyId, int pageNumber = 1, int pageSize = 10, bool isAsc = false)
         {
             var query = from o in _dbContext.Orders
-                        join od in _dbContext.OrderDetails
-                        on o.OrderId equals od.OrderId
-                        join p in _dbContext.Products 
-                        on od.ProductId equals p.ProductId
-                        where p.CompanyId == companyId 
-                        orderby isAsc ? o.OrderId : o.OrderId descending
+                        join od in _dbContext.OrderDetails on o.OrderId equals od.OrderId
+                        join p in _dbContext.Products on od.ProductId equals p.ProductId
+                        where p.CompanyId == companyId
                         select o;
 
+            return await GetPagedOrdersAsync(query.Distinct(), pageNumber, pageSize, isAsc);
+        }
+
+        public async Task<Page<Order>> GetByUserIdAsync(int userId, int pageNumber = 1, int pageSize = 10, bool isAsc = false)
+        {
+            IQueryable<Order> query = _dbContext.Orders.Where(o => o.UserId == userId);
+
+            return await GetPagedOrdersAsync(query, pageNumber, pageSize, isAsc);
+        }
+
+        public async Task<Page<Order>> GetPagedOrdersAsync(IQueryable<Order> query, int pageNumber, int pageSize, bool isAsc)
+        {
+            var totalItems = await query.CountAsync();
+
+            query = isAsc ? query.OrderBy(x => x.OrderId) : query.OrderByDescending(x => x.OrderId);
+
             var offset = (pageNumber - 1) * pageSize;
+            var items = await query.Skip(offset).Take(pageSize).ToListAsync();
 
-            return query.Distinct().Skip(offset).Take(pageSize).ToList();
-        }
-
-        public IEnumerable<Order> GetByUserId(int userId, int pageNumber = 1, int pageSize = 10, bool isAsc = false)
-        {
-            IQueryable<Order> query = _dbContext.Orders;
-            if (isAsc)
+            return new Page<Order>
             {
-                query = query.OrderBy(x => x.OrderId);
-            }
-            else
-            {
-                query = query.OrderByDescending(x => x.OrderId);
-            }
-            var offset = (pageNumber - 1) * pageSize;
-
-            return query.Where(x => x.UserId == userId)
-                .Skip(offset)
-                .Take(pageSize)
-                .ToList();
+                Items = items,
+                TotalItems = totalItems,
+                PageNumber = pageNumber,
+                PageSize = pageSize
+            };
         }
 
-        public int Remove(Order order)
+        public async Task<int> RemoveAsync(Order order)
         {
-            _dbContext.Remove(order);
-            return _dbContext.SaveChanges();
+            _dbContext.Orders.Remove(order);
+            return await _dbContext.SaveChangesAsync();
         }
 
-        public int Save(Order order)
+        public async Task<int> SaveAsync(Order order)
         {
-            if (order == null) throw new ArgumentNullException("order is null");
+            if (order == null) throw new ArgumentNullException(nameof(order));
 
             var now = DateTime.Now;
 
@@ -91,17 +82,19 @@ namespace PerfectTrip.Data.Repositories.Orders.Implement
             {
                 order.CreatedDate = now;
                 order.LastModifiedDate = now;
-                _dbContext.Orders.Add(order);
+                await _dbContext.Orders.AddAsync(order);
             }
-            else 
+            else
             {
                 order.LastModifiedDate = now;
                 _dbContext.Orders.Update(order);
             }
-            return _dbContext.SaveChanges();
+
+            return await _dbContext.SaveChangesAsync();
         }
 
-        public int SaveAll(IEnumerable<Order> orders)
+
+        public async Task<int> SaveAllAsync(IEnumerable<Order> orders)
         {
             if (orders == null || !orders.Any())
             {
@@ -109,14 +102,14 @@ namespace PerfectTrip.Data.Repositories.Orders.Implement
             }
 
             var now = DateTime.Now;
-
+            var newOrders = new List<Order>();
             foreach (var order in orders)
             {
                 if (order.OrderId <= 0)
                 {
                     order.CreatedDate = now;
                     order.LastModifiedDate = now;
-                    _dbContext.Orders.Add(order);
+                    newOrders.Add(order);
                 }
                 else
                 {
@@ -125,7 +118,12 @@ namespace PerfectTrip.Data.Repositories.Orders.Implement
                 }
             }
 
-            return _dbContext.SaveChanges();
+            if (newOrders.Any())
+            {
+                await _dbContext.Orders.AddRangeAsync(newOrders);
+            }
+
+            return await _dbContext.SaveChangesAsync();
         }
     }
 }
