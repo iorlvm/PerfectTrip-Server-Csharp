@@ -10,8 +10,4 @@
     <ProjectReference Include="..\PerfectTrip.Common\PerfectTrip.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Folder Include="Entities\Chat\" />
-  </ItemGroup>
-
 </Project>

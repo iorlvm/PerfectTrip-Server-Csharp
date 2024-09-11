@@ -1,6 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using PerfectTrip.Common.Entities.Member;
+using PerfectTrip.Domain.Entities.Data;
 using PerfectTrip.Domain.Entities.Orders;
 using PerfectTrip.Domain.Entities.Products;
 using System;
@@ -40,6 +41,8 @@ namespace PerfectTrip.Data
         public DbSet<Customer> Customers { get; set; }
         public DbSet<Company> Companies { get; set; }
         public DbSet<Admin> Admins { get; set; }
+
+        public DbSet<Image> Images { get; set; }
 
         public DbSet<Facility> Facilities { get; set; }
         public DbSet<Product> Products { get; set; }
