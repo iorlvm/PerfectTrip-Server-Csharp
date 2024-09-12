@@ -63,7 +63,7 @@ namespace PerfectTrip.Application.Services.Jwt.Implement
                 shortLivedClaims.Add(new Claim("CustomerGroup", userDto.CustomerGroup.Value.ToString()));
             }
 
-            var shortLivedExpiresInMinutes = 1.5;
+            var shortLivedExpiresInMinutes = AuthConstant.LOGIN_REFRESH_TTL;
             var longLivedExpiresInMinutes = rememberMe ? int.Parse(_rememberMeExpires) : int.Parse(_expires);
 
             // 生成短期token

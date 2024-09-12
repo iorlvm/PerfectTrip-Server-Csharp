@@ -9,8 +9,5 @@ namespace PerfectTrip.Common.Constant
 {
     public class RedisConstant
     {
-        public const string LOGIN_PREFIX = "login:";
-        public const double LOGIN_TTL = 30;
-        public const TimeUnit LOGIN_TTL_UNIT = TimeUnit.Minutes;
     }
 }

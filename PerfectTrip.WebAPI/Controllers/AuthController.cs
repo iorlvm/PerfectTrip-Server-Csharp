@@ -51,7 +51,7 @@ namespace PerfectTrip.WebAPI.Controllers
         public async Task<IActionResult> Login([FromRoute] string role, [FromBody] LoginRequest loginRequest)
         {
             // 確認 role 是否有效
-            if (role != RoleConstant.CUSTOMER && role != RoleConstant.COMPANY && role != RoleConstant.ADMIN)
+            if (role != AuthConstant.CUSTOMER && role != AuthConstant.COMPANY && role != AuthConstant.ADMIN)
             {
                 return NotFound();
             }
