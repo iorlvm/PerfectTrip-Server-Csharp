@@ -41,6 +41,6 @@ namespace PerfectTrip.Data.Repositories.Products.Interface
         /// </summary>
         /// <param name="facilities">要刪除的 Facility 實體集合。</param>
         /// <returns>刪除更改的行數。</returns>
-        Task<int> RemoveAllAsync(IEnumerable<Facility> facilities);
+        Task<int> RemoveAllAsync(IEnumerable<int> facilityIds);
     }
 }

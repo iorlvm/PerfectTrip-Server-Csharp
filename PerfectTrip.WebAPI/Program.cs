@@ -15,8 +15,14 @@ using PerfectTrip.Application.Services.Redis.Implement;
 using PerfectTrip.Application.Services.Redis.Interface;
 using PerfectTrip.Common.Utils;
 using PerfectTrip.Data;
+using PerfectTrip.Data.Repositories.Data.Implement;
+using PerfectTrip.Data.Repositories.Data.Interface;
 using PerfectTrip.Data.Repositories.Member.Implement;
 using PerfectTrip.Data.Repositories.Member.Interface;
+using PerfectTrip.Data.Repositories.Orders.Implement;
+using PerfectTrip.Data.Repositories.Orders.Interface;
+using PerfectTrip.Data.Repositories.Products.Implement;
+using PerfectTrip.Data.Repositories.Products.Interface;
 using StackExchange.Redis;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -124,6 +130,19 @@ builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<ICustomerRepository, CustomerRepository>();
 builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
 builder.Services.AddScoped<IAdminRepository, AdminRepository>();
+
+builder.Services.AddScoped<IImageRepository, ImageRepository>();
+builder.Services.AddScoped<IFacilityRepository, FacilityRepository>();
+
+builder.Services.AddScoped<IOrderRepository, OrderRepository>();
+builder.Services.AddScoped<IOrderDetailRepository, OrderDetailRepository>();
+builder.Services.AddScoped<IOrderResidentRepository, OrderResidentRepository>();
+
+builder.Services.AddScoped<IProductRepository, ProductRepository>();
+builder.Services.AddScoped<IProductDiscountRepository, ProductDiscountRepository>();
+builder.Services.AddScoped<IProductDetailRepository, ProductDetailRepository>();
+builder.Services.AddScoped<IProductDetailFacilityRepository, ProductDetailFacilityRepository>();
+builder.Services.AddScoped<IProductPhotoRepository, ProductPhotoRepository>();
 
 // ¦Û°Ê¬M®g¨Ì¿à
 builder.Services.AddAutoMapper(typeof(MappingProfile));

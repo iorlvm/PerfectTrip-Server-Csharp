@@ -22,6 +22,12 @@ namespace PerfectTrip.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+            // 設置所有外鍵關聯刪除為 Restrict，表示不啟用關聯刪除
+            foreach (var relationship in modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys()))
+            {
+                relationship.DeleteBehavior = DeleteBehavior.Restrict;
+            }
+
             modelBuilder.Entity<User>()
                 .HasIndex(u => u.Username)
                 .IsUnique();
@@ -33,8 +39,7 @@ namespace PerfectTrip.Data
             modelBuilder.Entity<OrderDetail>()
                 .HasOne(od => od.Product)
                 .WithMany()
-                .HasForeignKey(od => od.ProductId)
-                .OnDelete(DeleteBehavior.Restrict);
+                .HasForeignKey(od => od.ProductId);
         }
 
         public DbSet<User> Users { get; set; }

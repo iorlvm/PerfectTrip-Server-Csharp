@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using PerfectTrip.Data;
 
@@ -11,9 +12,10 @@ using PerfectTrip.Data;
 namespace PerfectTrip.Data.Migrations
 {
     [DbContext(typeof(PerfectTripDbContext))]
-    partial class PerfectTripDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240912055308_SetRestrict_WeiEN")]
+    partial class SetRestrict_WeiEN
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -507,8 +509,6 @@ namespace PerfectTrip.Data.Migrations
 
                     b.HasKey("ProductDiscountId");
 
-                    b.HasIndex("CompanyId");
-
                     b.ToTable("ProductDiscounts");
                 });
 
@@ -664,17 +664,6 @@ namespace PerfectTrip.Data.Migrations
                     b.Navigation("Facility");
 
                     b.Navigation("ProductDetail");
-                });
-
-            modelBuilder.Entity("PerfectTrip.Domain.Entities.Products.ProductDiscount", b =>
-                {
-                    b.HasOne("PerfectTrip.Common.Entities.Member.Company", "Company")
-                        .WithMany()
-                        .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("PerfectTrip.Domain.Entities.Products.ProductPhoto", b =>

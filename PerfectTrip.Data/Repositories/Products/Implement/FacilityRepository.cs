@@ -23,16 +23,27 @@ namespace PerfectTrip.Data.Repositories.Products.Implement
             return await _dbContext.Facilities.ToListAsync();
         }
 
-        public async Task<int> RemoveAllAsync(IEnumerable<Facility> facilities)
+        public async Task<int> RemoveAllAsync(IEnumerable<int> facilityIds)
         {
-            if (facilities == null || !facilities.Any())
+            if (facilityIds == null || !facilityIds.Any())
+            {
+                return 0;
+            }
+
+            var facilities = await _dbContext.Facilities
+                .Where(f => facilityIds.Contains(f.FacilityId))
+                .ToListAsync();
+
+            if (!facilities.Any())
             {
                 return 0;
             }
 
             _dbContext.Facilities.RemoveRange(facilities);
+
             return await _dbContext.SaveChangesAsync();
         }
+
 
         public async Task<int> RemoveAsync(Facility facility)
         {
